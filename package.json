@@ -1,5 +1,5 @@
 {
-  "name": "Ecommerce Store APi",
+  "name": "ecommerce_store_api",
   "version": "1.7.0",
   "description": "Ecommerce store for selling products",
   "bin": "bin/createNodejsApp.js",
