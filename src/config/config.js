@@ -2,8 +2,7 @@ const dotenv = require('dotenv');
 const path = require('path');
 const Joi = require('joi');
 
-const envPath = process.env.NODE_ENV === 'production' ? '/etc/secrets/.env' : '../../.env';
-dotenv.config({ path: path.join(__dirname, envPath) });
+dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 const envVarsSchema = Joi.object()
   .keys({
