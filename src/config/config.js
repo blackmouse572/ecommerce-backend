@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const dotenv = require('dotenv');
 const path = require('path');
 const Joi = require('joi');
@@ -31,6 +32,12 @@ const { value: envVars, error } = envVarsSchema.prefs({ errors: { label: 'key' }
 
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);
+}
+
+if (envVars.NODE_ENV === 'development') {
+  console.log('\n=====LOADED ENV VARIABLES=======');
+  console.log(envVars);
+  console.log('\n==========================');
 }
 
 module.exports = {
