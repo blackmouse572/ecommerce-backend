@@ -5,18 +5,27 @@ components:
       properties:
         id:
           type: string
+        username:
+          type: string
+        fullname:
+          type: string
+        dob:
+          type: string
+        address:
+          type: string
         email:
           type: string
           format: email
-        name:
-          type: string
         role:
           type: string
           enum: [user, admin]
       example:
         id: 5ebac534954b54139806c112
+        username: fake username
+        fullname: fake fullname
+        dob: 02-30-2002
+        address: fake address
         email: fake@example.com
-        name: fake name
         role: user
     Category:
       type: object
@@ -69,6 +78,15 @@ components:
           example:
             code: 400
             message: Email already taken
+    DuplicateUsername:
+      description: Username already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Username already taken
     DuplicateTitle:
       description: Title already taken
       content:

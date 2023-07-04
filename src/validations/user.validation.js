@@ -12,7 +12,8 @@ const createUser = {
 
 const getUsers = {
   query: Joi.object().keys({
-    name: Joi.string(),
+    username: Joi.string(),
+    fullname: Joi.string(),
     role: Joi.string(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
@@ -32,9 +33,12 @@ const updateUser = {
   }),
   body: Joi.object()
     .keys({
+      username: Joi.string(),
+      fullname: Joi.string(),
+      dob: Joi.date(),
+      address: Joi.string(),
       email: Joi.string().email(),
       password: Joi.string().custom(password),
-      name: Joi.string(),
     })
     .min(1),
 };

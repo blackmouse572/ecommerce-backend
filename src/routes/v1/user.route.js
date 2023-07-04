@@ -42,13 +42,23 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - name
+ *               - username
+ *               - fullname
+ *               - dob
+ *               - address
  *               - email
  *               - password
  *               - role
  *             properties:
- *               name:
+ *               username:
  *                 type: string
+ *                 description: must be unique
+ *               fullname:
+ *                 type: string
+ *               dob:
+ *                 type: date
+ *               address:
+ *                 type: date
  *               email:
  *                 type: string
  *                 format: email
