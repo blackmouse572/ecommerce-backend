@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { Category: Product } = require('../models');
+const { Product } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -8,7 +8,7 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Product>}
  */
 const createProduct = async (productBody) => {
-  return Product.create(productBody).populate('category');
+  return Product.create(productBody);
 };
 
 /**
@@ -21,7 +21,7 @@ const createProduct = async (productBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryProducts = async (filter, options) => {
-  const products = await Product.paginate(filter, options).populate('category');
+  const products = await Product.paginate(filter, options);
   return products;
 };
 

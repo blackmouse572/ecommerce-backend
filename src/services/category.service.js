@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { Category } = require('../models');
+const slug = require('../utils/slug');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -8,10 +9,11 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Category>}
  */
 const createCategory = async (categoryBody) => {
-  if (await Category.isTitleTaken(categoryBody.email)) {
+  if (await Category.isTitleTaken(categoryBody.title)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Title already taken');
   }
-  return Category.create(categoryBody);
+
+  return Category.create({ ...categoryBody, slug: slug(categoryBody.title) });
 };
 
 /**
