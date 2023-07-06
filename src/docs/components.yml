@@ -40,6 +40,31 @@ components:
         id: 5ebac534954b54139806c112
         title: Category 1
         slug: category-1
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          $ref: '#/components/schemas/Category'
+        quantity:
+          type: number
+        price:
+          type: number
+      example:
+        id: 5ebac534954b54139806c112
+        name: Product 1
+        description: Product 1's description
+        category:
+          id: 5ebac534954b54139806c112
+          title: Category 1
+          slug: category-1
+        quantity: 10
+        price: 10000
     Token:
       type: object
       properties:

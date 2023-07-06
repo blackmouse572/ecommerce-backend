@@ -18,13 +18,13 @@ const getCategories = {
 
 const getCategory = {
   params: Joi.object().keys({
-    categoryId: Joi.string().custom(objectId),
+    id: Joi.string().custom(objectId),
   }),
 };
 
 const updateCategory = {
   params: Joi.object().keys({
-    categoryId: Joi.required().custom(objectId),
+    id: Joi.required().custom(objectId),
   }),
   body: Joi.object()
     .keys({
@@ -35,7 +35,7 @@ const updateCategory = {
 
 const deleteCategory = {
   params: Joi.object().keys({
-    categoryId: Joi.string().custom(objectId),
+    id: Joi.string().custom(objectId),
   }),
 };
 

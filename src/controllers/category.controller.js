@@ -17,7 +17,7 @@ const getCategories = catchAsync(async (req, res) => {
 });
 
 const getCategory = catchAsync(async (req, res) => {
-  const category = await categoryService.getCategoryById(req.params.categoryId);
+  const category = await categoryService.getCategoryById(req.params.id);
   if (!category) {
     throw new ApiError(httpStatus.NOT_FOUND, 'category not found');
   }
@@ -25,12 +25,12 @@ const getCategory = catchAsync(async (req, res) => {
 });
 
 const updateCategory = catchAsync(async (req, res) => {
-  const category = await categoryService.updateCategoryById(req.params.categoryId, req.body);
+  const category = await categoryService.updateCategoryById(req.params.id, req.body);
   res.send(category);
 });
 
 const deleteCategory = catchAsync(async (req, res) => {
-  await categoryService.deleteUserById(req.params.categoryId);
+  await categoryService.deleteCategoryById(req.params.id);
   res.status(httpStatus.NO_CONTENT).send();
 });
 
