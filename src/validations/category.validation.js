@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const { objectId } = require('./custom.validation');
 
 const createCategory = {
   body: Joi.object().keys({
@@ -18,13 +17,13 @@ const getCategories = {
 
 const getCategory = {
   params: Joi.object().keys({
-    id: Joi.string().custom(objectId),
+    slug: Joi.string(),
   }),
 };
 
 const updateCategory = {
   params: Joi.object().keys({
-    id: Joi.required().custom(objectId),
+    slug: Joi.string().required(),
   }),
   body: Joi.object()
     .keys({
@@ -35,7 +34,7 @@ const updateCategory = {
 
 const deleteCategory = {
   params: Joi.object().keys({
-    id: Joi.string().custom(objectId),
+    slug: Joi.string(),
   }),
 };
 

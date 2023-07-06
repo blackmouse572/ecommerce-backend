@@ -1,6 +1,6 @@
 const httpStatus = require('http-status');
 const { Category } = require('../models');
-const slug = require('../utils/slug');
+const toSlug = require('../utils/slug');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -13,7 +13,7 @@ const createCategory = async (categoryBody) => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Title already taken');
   }
 
-  return Category.create({ ...categoryBody, slug: slug(categoryBody.title) });
+  return Category.create({ ...categoryBody, slug: toSlug(categoryBody.title) });
 };
 
 /**
@@ -40,6 +40,15 @@ const getCategoryById = async (id) => {
 };
 
 /**
+ * Get category by slug
+ * @param {string} slug
+ * @returns {Promise<Category>}
+ */
+const getCategoryBySlug = async (slug) => {
+  return Category.findOne({ slug });
+};
+
+/**
  * Update category by id
  * @param {ObjectId} categoryId
  * @param {Object} updateBody
@@ -51,6 +60,25 @@ const updateCategoryById = async (categoryId, updateBody) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
   }
   if (updateBody.title && (await Category.isTitleTaken(updateBody.title, categoryId))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Title already taken');
+  }
+  Object.assign(category, updateBody);
+  await category.save();
+  return category;
+};
+
+/**
+ * Update category by slug
+ * @param {ObjectId} slug
+ * @param {Object} updateBody
+ * @returns {Promise<Category>}
+ */
+const updateCategoryBySlug = async (slug, updateBody) => {
+  const category = await getCategoryBySlug(slug);
+  if (!category) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+  }
+  if (updateBody.title && (await Category.isTitleTaken(updateBody.title, slug))) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Title already taken');
   }
   Object.assign(category, updateBody);
@@ -72,10 +100,27 @@ const deleteCategoryById = async (categoryId) => {
   return category;
 };
 
+/**
+ * Delete category by slug
+ * @param {ObjectId} slug
+ * @returns {Promise<Category>}
+ */
+const deleteCategoryBySlug = async (slug) => {
+  const category = await getCategoryBySlug(slug);
+  if (!category) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+  }
+  await category.remove();
+  return category;
+};
+
 module.exports = {
   createCategory,
   queryCategories,
   getCategoryById,
   updateCategoryById,
   deleteCategoryById,
+  getCategoryBySlug,
+  updateCategoryBySlug,
+  deleteCategoryBySlug,
 };

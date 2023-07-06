@@ -44,7 +44,7 @@ module.exports = router;
  *             required:
  *               - name
  *               - description
- *               - category
+ *               - categorySlug
  *               - quantity
  *               - price
  *             properties:
@@ -52,7 +52,7 @@ module.exports = router;
  *                 type: string
  *               description:
  *                 type: string
- *               category:
+ *               categorySlug:
  *                 type: string
  *               quantity:
  *                 type: number
@@ -61,7 +61,7 @@ module.exports = router;
  *             example:
  *               name: fake product name
  *               description: fake product description
- *               category: 5ebac534954b54139806c112
+ *               category: category-1
  *               quantity: 10
  *               price: 10000
  *     responses:
@@ -89,10 +89,10 @@ module.exports = router;
  *           type: string
  *         description: Product name
  *       - in: query
- *         name: category
+ *         name: categorySlug
  *         schema:
  *           type: string
- *         description: Category id
+ *         description: Category slug
  *       - in: query
  *         name: sortBy
  *         schema:
@@ -194,7 +194,7 @@ module.exports = router;
  *             required:
  *               - name
  *               - description
- *               - category
+ *               - categorySlug
  *               - quantity
  *               - price
  *             properties:
@@ -211,7 +211,7 @@ module.exports = router;
  *             example:
  *               name: fake product name
  *               description: fake product description
- *               category: 5ebac534954b54139806c112
+ *               categorySlug: category-1
  *               quantity: 10
  *               price: 10000
  *     responses:
