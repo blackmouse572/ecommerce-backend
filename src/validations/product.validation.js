@@ -7,7 +7,7 @@ const createProduct = {
     description: Joi.string().required(),
     category: Joi.string().custom(objectId).required(),
     quantity: Joi.number().integer().required(),
-    price: Joi.number().integer().require(),
+    price: Joi.number().integer().required(),
   }),
 };
 
