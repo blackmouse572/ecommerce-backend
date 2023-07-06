@@ -1,38 +1,38 @@
 const express = require('express');
 const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
-const userValidation = require('../../validations/user.validation');
-const userController = require('../../controllers/user.controller');
+const productValidation = require('../../validations/product.validation');
+const productController = require('../../controllers/product.controller');
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(auth('manageUsers'), validate(userValidation.createUser), userController.createUser)
-  .get(auth('getUsers'), validate(userValidation.getUsers), userController.getUsers);
+  .post(auth('manageProducts'), validate(productValidation.createProduct), productController.createProduct)
+  .get(validate(productValidation.getProducts), productController.getProducts);
 
 router
   .route('/:id')
-  .get(auth('getUsers'), validate(userValidation.getUser), userController.getUser)
-  .patch(auth('manageUsers'), validate(userValidation.updateUser), userController.updateUser)
-  .delete(auth('manageUsers'), validate(userValidation.deleteUser), userController.deleteUser);
+  .get(validate(productValidation.getProduct), productController.getProduct)
+  .patch(auth('manageProducts'), validate(productValidation.updateProduct), productController.updateProduct)
+  .delete(auth('manageProducts'), validate(productValidation.deleteProduct), productController.deleteProduct);
 
 module.exports = router;
 
 /**
  * @swagger
  * tags:
- *   name: Users
- *   description: User management and retrieval
+ *   name: Products
+ *   description: Product management and retrieval
  */
 
 /**
  * @swagger
- * /users:
+ * /products:
  *   post:
- *     summary: Create a user
- *     description: Only admins can create other users.
- *     tags: [Users]
+ *     summary: Create a product
+ *     description: Only admins can create product.
+ *     tags: [Products]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -42,88 +42,69 @@ module.exports = router;
  *           schema:
  *             type: object
  *             required:
- *               - username
- *               - fullname
- *               - dob
- *               - address
- *               - email
- *               - password
- *               - role
+ *               - name
+ *               - description
+ *               - category
+ *               - quantity
+ *               - price
  *             properties:
- *               username:
+ *               name:
  *                 type: string
- *                 description: must be unique
- *               fullname:
+ *               description:
  *                 type: string
- *               dob:
- *                 type: date
- *               address:
- *                 type: date
- *               email:
+ *               category:
  *                 type: string
- *                 format: email
- *                 description: must be unique
- *               password:
- *                 type: string
- *                 format: password
- *                 minLength: 8
- *                 description: At least one number and one letter
- *               role:
- *                  type: string
- *                  enum: [user, admin]
+ *               quantity:
+ *                 type: number
+ *               price:
+ *                 type: number
  *             example:
- *               name: fake name
- *               email: fake@example.com
- *               password: password1
- *               role: user
+ *               name: fake product name
+ *               description: fake product description
+ *               category: 5ebac534954b54139806c112
+ *               quantity: 10
+ *               price: 10000
  *     responses:
  *       "201":
  *         description: Created
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
- *       "400":
- *         $ref: '#/components/responses/DuplicateEmail'
+ *                $ref: '#/components/schemas/Product'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
  *         $ref: '#/components/responses/Forbidden'
  *
  *   get:
- *     summary: Get all users
- *     description: Only admins can retrieve all users.
- *     tags: [Users]
+ *     summary: Get all products
+ *     description: Admins and Users can retrieve all products.
+ *     tags: [Products]
  *     security:
  *       - bearerAuth: []
  *     parameters:
  *       - in: query
- *         name: username
+ *         name: name
  *         schema:
  *           type: string
- *         description: Username
+ *         description: Product name
  *       - in: query
- *         name: fullname
+ *         name: category
  *         schema:
  *           type: string
- *         description: User full name
- *       - in: query
- *         name: role
- *         schema:
- *           type: string
- *         description: User role
+ *         description: Category id
  *       - in: query
  *         name: sortBy
  *         schema:
  *           type: string
- *         description: sort by query in the form of field:desc/asc (ex. name:asc)
+ *         description: sort by query in the form of field:desc/asc (ex. title:asc)
  *       - in: query
  *         name: limit
  *         schema:
  *           type: integer
  *           minimum: 1
  *         default: 10
- *         description: Maximum number of users
+ *         description: Maximum number of products
  *       - in: query
  *         name: page
  *         schema:
@@ -142,7 +123,7 @@ module.exports = router;
  *                 results:
  *                   type: array
  *                   items:
- *                     $ref: '#/components/schemas/User'
+ *                     $ref: '#/components/schemas/product'
  *                 page:
  *                   type: integer
  *                   example: 1
@@ -163,11 +144,11 @@ module.exports = router;
 
 /**
  * @swagger
- * /users/{id}:
+ * /products/{id}:
  *   get:
- *     summary: Get a user
- *     description: Logged in users can fetch only their own user information. Only admins can fetch other users.
- *     tags: [Users]
+ *     summary: Get a product
+ *     description: admins and users can fetch a product.
+ *     tags: [Products]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -176,14 +157,14 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Product id
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Product'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -192,9 +173,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   patch:
- *     summary: Update a user
- *     description: Logged in users can only update their own information. Only admins can update other users.
- *     tags: [Users]
+ *     summary: Update a product
+ *     description: Only admins can update products.
+ *     tags: [Products]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -203,38 +184,45 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Product id
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - name
+ *               - description
+ *               - category
+ *               - quantity
+ *               - price
  *             properties:
  *               name:
  *                 type: string
- *               email:
+ *               description:
  *                 type: string
- *                 format: email
- *                 description: must be unique
- *               password:
+ *               category:
  *                 type: string
- *                 format: password
- *                 minLength: 8
- *                 description: At least one number and one letter
+ *               quantity:
+ *                 type: number
+ *               price:
+ *                 type: number
  *             example:
- *               name: fake name
- *               email: fake@example.com
- *               password: password1
+ *               name: fake product name
+ *               description: fake product description
+ *               category: 5ebac534954b54139806c112
+ *               quantity: 10
+ *               price: 10000
  *     responses:
  *       "200":
  *         description: OK
  *         content:
  *           application/json:
  *             schema:
- *                $ref: '#/components/schemas/User'
+ *                $ref: '#/components/schemas/Product'
  *       "400":
- *         $ref: '#/components/responses/DuplicateEmail'
+ *         $ref: '#/components/responses/DuplicateTitle'
  *       "401":
  *         $ref: '#/components/responses/Unauthorized'
  *       "403":
@@ -243,9 +231,9 @@ module.exports = router;
  *         $ref: '#/components/responses/NotFound'
  *
  *   delete:
- *     summary: Delete a user
- *     description: Logged in users can delete only themselves. Only admins can delete other users.
- *     tags: [Users]
+ *     summary: Delete a product
+ *     description: Only admins can delete products.
+ *     tags: [Products]
  *     security:
  *       - bearerAuth: []
  *     parameters:
@@ -254,7 +242,7 @@ module.exports = router;
  *         required: true
  *         schema:
  *           type: string
- *         description: User id
+ *         description: Product id
  *     responses:
  *       "200":
  *         description: No content

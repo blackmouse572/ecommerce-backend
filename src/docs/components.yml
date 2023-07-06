@@ -5,20 +5,66 @@ components:
       properties:
         id:
           type: string
+        username:
+          type: string
+        fullname:
+          type: string
+        dob:
+          type: string
+        address:
+          type: string
         email:
           type: string
           format: email
-        name:
-          type: string
         role:
           type: string
           enum: [user, admin]
       example:
         id: 5ebac534954b54139806c112
+        username: fake username
+        fullname: fake fullname
+        dob: 02-30-2002
+        address: fake address
         email: fake@example.com
-        name: fake name
         role: user
-
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        slug:
+          type: string
+      example:
+        id: 5ebac534954b54139806c112
+        title: Category 1
+        slug: category-1
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          $ref: '#/components/schemas/Category'
+        quantity:
+          type: number
+        price:
+          type: number
+      example:
+        id: 5ebac534954b54139806c112
+        name: Product 1
+        description: Product 1's description
+        category:
+          id: 5ebac534954b54139806c112
+          title: Category 1
+          slug: category-1
+        quantity: 10
+        price: 10000
     Token:
       type: object
       properties:
@@ -57,6 +103,24 @@ components:
           example:
             code: 400
             message: Email already taken
+    DuplicateUsername:
+      description: Username already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Username already taken
+    DuplicateTitle:
+      description: Title already taken
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: Title already taken
     Unauthorized:
       description: Unauthorized
       content:
