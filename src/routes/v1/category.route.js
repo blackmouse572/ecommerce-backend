@@ -12,7 +12,7 @@ router
   .get(validate(categoryValidation.getCategories), categoryController.getCategories);
 
 router
-  .route('/:id')
+  .route('/:slug')
   .get(validate(categoryValidation.getCategory), categoryController.getCategory)
   .patch(auth('manageCategories'), validate(categoryValidation.updateCategory), categoryController.updateCategory)
   .delete(auth('manageCategories'), validate(categoryValidation.deleteCategory), categoryController.deleteCategory);
@@ -126,7 +126,7 @@ module.exports = router;
 
 /**
  * @swagger
- * /categories/{id}:
+ * /categories/{slug}:
  *   get:
  *     summary: Get a category
  *     description: admins and users can fetch a category.
@@ -135,11 +135,11 @@ module.exports = router;
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: slug
  *         required: true
  *         schema:
  *           type: string
- *         description: Category id
+ *         description: Category slug
  *     responses:
  *       "200":
  *         description: OK
@@ -162,11 +162,11 @@ module.exports = router;
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: slug
  *         required: true
  *         schema:
  *           type: string
- *         description: Category id
+ *         description: Category slug
  *     requestBody:
  *       required: true
  *       content:
@@ -203,11 +203,11 @@ module.exports = router;
  *       - bearerAuth: []
  *     parameters:
  *       - in: path
- *         name: id
+ *         name: slug
  *         required: true
  *         schema:
  *           type: string
- *         description: Category id
+ *         description: Category slug
  *     responses:
  *       "200":
  *         description: No content

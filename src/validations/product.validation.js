@@ -5,7 +5,7 @@ const createProduct = {
   body: Joi.object().keys({
     name: Joi.string().required(),
     description: Joi.string().required(),
-    category: Joi.string().custom(objectId).required(),
+    categorySlug: Joi.string().required(),
     quantity: Joi.number().integer().required(),
     price: Joi.number().integer().required(),
   }),
@@ -15,6 +15,7 @@ const getProducts = {
   query: Joi.object().keys({
     name: Joi.string(),
     category: Joi.string().custom(objectId),
+    categorySlug: Joi.string(),
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
@@ -35,7 +36,7 @@ const updateProduct = {
     .keys({
       name: Joi.string(),
       description: Joi.string(),
-      category: Joi.string().custom(objectId),
+      categorySlug: Joi.string(),
       quantity: Joi.number().integer(),
       price: Joi.number().integer(),
     })

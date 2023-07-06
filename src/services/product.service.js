@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { Product } = require('../models');
+const CategoryService = require('./category.service');
 const ApiError = require('../utils/ApiError');
 
 /**
@@ -8,7 +9,14 @@ const ApiError = require('../utils/ApiError');
  * @returns {Promise<Product>}
  */
 const createProduct = async (productBody) => {
-  return Product.create(productBody);
+  let cate;
+  if (productBody.categorySlug) {
+    cate = await CategoryService.getCategoryBySlug(productBody.categorySlug);
+    if (!cate) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+    }
+  }
+  return Product.create({ ...productBody, category: cate.id });
 };
 
 /**
@@ -21,7 +29,16 @@ const createProduct = async (productBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryProducts = async (filter, options) => {
-  const products = await Product.paginate(filter, options);
+  let products;
+  if (filter.categorySlug) {
+    const cate = await CategoryService.getCategoryBySlug(filter.categorySlug);
+    if (!cate) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+    }
+    products = await Product.paginate({ ...filter, category: cate.id }, options);
+  } else {
+    products = await Product.paginate(...filter, options);
+  }
   return products;
 };
 
@@ -45,7 +62,15 @@ const updateProductById = async (productId, updateBody) => {
   if (!product) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Product not found');
   }
-  Object.assign(product, updateBody);
+  if (updateBody.categorySlug) {
+    const cate = await CategoryService.getCategoryBySlug(updateBody.categorySlug);
+    if (!cate) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'Category not found');
+    }
+    Object.assign(product, { ...updateBody, category: cate.id });
+  } else {
+    Object.assign(product, updateBody);
+  }
   await product.save();
   product = await getProductById(productId).populate('category');
   return product;
